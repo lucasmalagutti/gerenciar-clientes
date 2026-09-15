@@ -29,7 +29,7 @@ namespace CRUD_Cliente2.Web.Data
                 .HasOne(c => c.EnderecoResidencial)
                  .WithMany()
                  .HasForeignKey(c => c.EnderecoResidencialId)
-                 .OnDelete(DeleteBehavior.Restrict); 
+                 .OnDelete(DeleteBehavior.Restrict);
 
             modelBuilder.Entity<Cliente>()
                 .HasOne(c => c.EnderecoCobranca)

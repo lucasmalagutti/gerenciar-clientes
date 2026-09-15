@@ -8,13 +8,13 @@ namespace CRUD_Cliente2.Web.ViewModels
     {
         [Required]
         public int ClienteId { get; set; }
-        [Required] public string TipoResidencia { get; set; }
-        [Required] public string TipoLogradouro { get; set; }
-        [Required] public string Logradouro { get; set; }
-        [Required] public string Numero { get; set; }
-        [Required] public string Bairro { get; set; }
+        [Required(ErrorMessage = "Informe tipo de residência.")] public string TipoResidencia { get; set; }
+        [Required(ErrorMessage = "Informe tipo de logradouro.")] public string TipoLogradouro { get; set; }
+        [Required(ErrorMessage = "Informe o logradouro.")] public string Logradouro { get; set; }
+        [Required(ErrorMessage = "Informe o número.")] public string Numero { get; set; }
+        [Required(ErrorMessage = "Informe o bairro.")] public string Bairro { get; set; }
 
-        [Required, RegularExpression(@"^\d{8}$", ErrorMessage = "CEP inválido.")]
+        [Required(ErrorMessage = "Informe o cep."), RegularExpression(@"^\d{8}$", ErrorMessage = "CEP deve ter 8 caracteres.")]
         public string CEP { get; set; }
 
         [Required(ErrorMessage = "Selecione uma cidade.")]

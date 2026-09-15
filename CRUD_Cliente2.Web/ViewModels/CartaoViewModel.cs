@@ -26,15 +26,5 @@ namespace CRUD_Cliente2.Web.ViewModels
         public string CodigoSeguranca { get; set; }
 
         public bool Preferencial { get; set; }
-
-        public Cartao ToEntity() => new Cartao
-        {
-            NumeroCartao = NumeroCartao,
-            NomeImpresso = NomeImpresso,
-            Bandeira = Bandeira,
-            CodigoSeguranca = CodigoSeguranca,
-            Preferencial = Preferencial,
-            ClienteId = ClienteId
-        };
     }
 }

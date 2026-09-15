@@ -38,8 +38,18 @@ namespace CRUD_Cliente2.Web.Facade
             _adicionarEnderecoStrategy = adicionarEnderecoStrategy;
             _adicionarCartaoStrategy = adicionarCartaoStrategy;
         }
-        public async Task AdicionarCartaoAsync(Cartao cartao)
+        public async Task AdicionarCartaoAsync(CartaoViewModel viewModel)
         {
+            var cartao = new Cartao
+            {
+                Ultimos4Digitos = viewModel.NumeroCartao.Substring(
+                    viewModel.NumeroCartao.Length - 4
+                ),
+                NomeImpresso = viewModel.NomeImpresso,
+                Bandeira = viewModel.Bandeira,
+                Preferencial = viewModel.Preferencial,
+                ClienteId = viewModel.ClienteId
+            };
             await _adicionarCartaoStrategy.ExecutarAsync(cartao);
         }
         public async Task AdicionarEnderecoAsync(int clienteId, Endereco endereco)
@@ -61,13 +71,29 @@ namespace CRUD_Cliente2.Web.Facade
             return await _clienteDAO.ObterTodosAsync();
         }
 
-        public async Task CadastrarClienteAsync(Cliente cliente)
+        public async Task CadastrarClienteAsync(ClienteCreateViewModel viewModel)
         {
+            var cliente = viewModel.ToEntity();
             await _cadastrarStrategy.ExecutarAsync(cliente);
+            if (!string.IsNullOrWhiteSpace(viewModel.NumeroCartao))
+            {
+                var cartao = new Cartao
+                {
+                    Ultimos4Digitos = viewModel.NumeroCartao.Substring(
+                        viewModel.NumeroCartao.Length - 4
+                    ),
+                    NomeImpresso = viewModel.NomeImpresso,
+                    Bandeira = viewModel.Bandeira,
+                    Preferencial = viewModel.Preferencial,
+                    ClienteId = cliente.Id
+                };
+
+                await _adicionarCartaoStrategy.ExecutarAsync(cartao);
+            }
         }
         public void PopularDropdowns(EnderecoViewModel enderecoViewModel)
         {
-             _popularDropdownsStrategy.Executar(enderecoViewModel);
+            _popularDropdownsStrategy.Executar(enderecoViewModel);
         }
 
         public async Task EditarClienteAsync(Cliente cliente)

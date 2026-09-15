@@ -5,10 +5,12 @@ namespace CRUD_Cliente2.Web.Strategy
     public class AlterarSenhaStrategy : IClienteSenhaStrategy
     {
         private readonly AppDbContext _context;
+        private readonly ICriptografarSenhaStrategy _criptografarSenhaStrategy;
 
-        public AlterarSenhaStrategy(AppDbContext context)
+        public AlterarSenhaStrategy(AppDbContext context, ICriptografarSenhaStrategy criptografarSenhaStrategy)
         {
             _context = context;
+            _criptografarSenhaStrategy = criptografarSenhaStrategy;
         }
 
         public async Task AlterarSenhaAsync(int clienteId, string novaSenha)
@@ -20,17 +22,10 @@ namespace CRUD_Cliente2.Web.Strategy
             if (cliente == null)
                 throw new ArgumentException("Cliente não encontrado.");
 
-            // Criptografar senha (mesma regra usada no cadastro)
-            cliente.Senha = CriptografarSenha(novaSenha);
+            cliente.Senha = _criptografarSenhaStrategy.Criptografar(novaSenha);
 
             _context.Clientes.Update(cliente);
             await _context.SaveChangesAsync();
-        }
-
-        private string CriptografarSenha(string senha)
-        {
-            // Placeholder simples: usar hashing real em produção
-            return Convert.ToBase64String(System.Text.Encoding.UTF8.GetBytes(senha));
         }
     }
 }

@@ -8,8 +8,8 @@ namespace CRUD_Cliente2.Web.Models
         public int Id { get; set; }
 
         [Required]
-        [CreditCard]
-        public string NumeroCartao { get; set; }
+        [StringLength(4)]
+        public string Ultimos4Digitos { get; set; }
 
         [Required]
         [MaxLength(100)]
@@ -18,10 +18,6 @@ namespace CRUD_Cliente2.Web.Models
         [Required]
         [MaxLength(20)]
         public string Bandeira { get; set; }
-
-        [Required]
-        [StringLength(4, MinimumLength = 3)]
-        public string CodigoSeguranca { get; set; }
 
         public bool Preferencial { get; set; }
 

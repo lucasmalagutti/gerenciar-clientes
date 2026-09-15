@@ -1,4 +1,6 @@
-﻿using System.Text;
+﻿using System.Security.Cryptography;
+using System.Text;
+using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 
 namespace CRUD_Cliente2.Web.Strategy
 {
@@ -9,7 +11,17 @@ namespace CRUD_Cliente2.Web.Strategy
             if (string.IsNullOrWhiteSpace(senha))
                 throw new ArgumentException("Senha não pode ser vazia.");
 
-            return Convert.ToBase64String(Encoding.UTF8.GetBytes(senha));
+            byte[] salt = RandomNumberGenerator.GetBytes(128 / 8);
+
+            string hashed = Convert.ToBase64String(KeyDerivation.Pbkdf2(
+                password: senha!,
+                salt: salt,
+                prf: KeyDerivationPrf.HMACSHA256,
+                iterationCount: 100000,
+                numBytesRequested: 256 / 8
+            ));
+
+            return hashed;
         }
     }
 }

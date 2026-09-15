@@ -1,6 +1,6 @@
 ﻿using CRUD_Cliente2.Web.Data;
 using CRUD_Cliente2.Web.Models;
-using Microsoft.EntityFrameworkCore;
+using CRUD_Cliente2.Web.Validators;
 
 namespace CRUD_Cliente2.Web.Strategy
 {
@@ -10,11 +10,13 @@ namespace CRUD_Cliente2.Web.Strategy
         private readonly IClienteDAO _clienteDAO;
         private readonly ICriptografarSenhaStrategy _criptografarSenhaStrategy;
 
-        public CadastrarClienteStrategy(AppDbContext context, IClienteDAO clienteDAO, ICriptografarSenhaStrategy criptografarSenhaStrategy)
+        public CadastrarClienteStrategy(AppDbContext context, IClienteDAO clienteDAO, ICriptografarSenhaStrategy criptografarSenhaStrategy
+        )
         {
             _context = context;
             _clienteDAO = clienteDAO;
             _criptografarSenhaStrategy = criptografarSenhaStrategy;
+
         }
 
         public async Task ExecutarAsync(Cliente cliente)
@@ -23,29 +25,27 @@ namespace CRUD_Cliente2.Web.Strategy
                 throw new ArgumentException("Senha deve ter pelo menos 8 caracteres.");
 
             cliente.Senha = _criptografarSenhaStrategy.Criptografar(cliente.Senha);
+            cliente.CPF = ValidarCpf.Validar(cliente.CPF);
+            cliente.Email = ValidarEmail.Validar(cliente.Email);
             cliente.Ativo = true;
             cliente.Ranking = 0;
 
             if (cliente.EnderecoResidencial == null || cliente.EnderecoCobranca == null)
                 throw new ArgumentException("Endereços obrigatórios.");
 
-            // Primeiro, adiciona os endereços ao contexto
             await _context.Enderecos.AddAsync(cliente.EnderecoResidencial);
             await _context.Enderecos.AddAsync(cliente.EnderecoCobranca);
             await _context.SaveChangesAsync();
 
-            // Atualiza os IDs dos endereços para o cliente
             cliente.EnderecoResidencialId = cliente.EnderecoResidencial.Id;
             cliente.EnderecoCobrancaId = cliente.EnderecoCobranca.Id;
 
-            // Associa o cliente aos endereços para o relacionamento reverso
             cliente.EnderecoResidencial.Cliente = cliente;
             cliente.EnderecoCobranca.Cliente = cliente;
 
             cliente.Enderecos.Add(cliente.EnderecoResidencial);
             cliente.Enderecos.Add(cliente.EnderecoCobranca);
 
-            // Salva o cliente
             await _context.Clientes.AddAsync(cliente);
             await _context.SaveChangesAsync();
         }

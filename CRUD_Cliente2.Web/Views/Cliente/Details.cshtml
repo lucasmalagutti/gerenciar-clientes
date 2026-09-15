@@ -65,7 +65,7 @@
                 @foreach (var c in Model.Cartoes)
                 {
                     <li class="list-group-item">
-                        <strong>Número:</strong> **** **** **** @c.NumeroCartao[^4..] <br />
+                        <strong>Número:</strong> **** **** **** @c.Ultimos4Digitos[^4..] <br />
                         <strong>Nome Impresso:</strong> @c.NomeImpresso <br />
                         <strong>Bandeira:</strong> @c.Bandeira <br />
                         <strong>Preferencial:</strong> @(c.Preferencial ? "Sim" : "Não")

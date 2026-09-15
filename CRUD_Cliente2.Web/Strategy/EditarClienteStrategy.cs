@@ -1,5 +1,6 @@
 ﻿using CRUD_Cliente2.Web.Data;
 using CRUD_Cliente2.Web.Models;
+using CRUD_Cliente2.Web.Validators;
 using Microsoft.EntityFrameworkCore;
 
 namespace CRUD_Cliente2.Web.Strategy
@@ -9,7 +10,8 @@ namespace CRUD_Cliente2.Web.Strategy
         private readonly AppDbContext _context;
         private readonly IClienteDAO _clienteDAO;
 
-        public EditarClienteStrategy(AppDbContext context, IClienteDAO clienteDAO)
+        public EditarClienteStrategy(AppDbContext context, IClienteDAO clienteDAO
+        )
         {
             _context = context;
             _clienteDAO = clienteDAO;
@@ -28,8 +30,8 @@ namespace CRUD_Cliente2.Web.Strategy
 
             clienteExistente.Nome = clienteAtualizado.Nome;
             clienteExistente.DataNascimento = clienteAtualizado.DataNascimento;
-            clienteExistente.CPF = clienteAtualizado.CPF;
-            clienteExistente.Email = clienteAtualizado.Email;
+            clienteExistente.CPF = ValidarCpf.Validar(clienteAtualizado.CPF);
+            clienteExistente.Email = ValidarEmail.Validar(clienteAtualizado.Email);
             clienteExistente.Genero = clienteAtualizado.Genero;
             clienteExistente.TelefoneTipo = clienteAtualizado.TelefoneTipo;
             clienteExistente.TelefoneDDD = clienteAtualizado.TelefoneDDD;

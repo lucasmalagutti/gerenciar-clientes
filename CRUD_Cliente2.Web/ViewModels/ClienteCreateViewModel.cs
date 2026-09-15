@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using CRUD_Cliente2.Web.Models;
+using CRUD_Cliente2.Web.Validators;
 
 namespace CRUD_Cliente2.Web.ViewModels
 {
@@ -11,45 +12,46 @@ namespace CRUD_Cliente2.Web.ViewModels
             EnderecoCobranca = new EnderecoViewModel();
         }
 
-        [Required]
+        [Required(ErrorMessage = "Informe o nome.")]
         [MaxLength(100)]
         public string Nome { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Informe a data nascimento.")]
+        [DataNascimentoValida(idadeMinima: 18, ErrorMessage = "Você deve ser maior de idade.")]
         public DateTime DataNascimento { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Informe o cpf.")]
         [RegularExpression(@"^\d{11}$", ErrorMessage = "CPF inválido")]
         public string CPF { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Informe o email.")]
         [EmailAddress]
         public string Email { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Informe o gênero.")]
         public string Genero { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Informe o tipo de telefone.")]
         public string TelefoneTipo { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Informe o ddd do telefone.")]
         [RegularExpression(@"^\d{2}$")]
         public string TelefoneDDD { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Informe o numero de telefone.")]
         [RegularExpression(@"^\d{8,9}$")]
         public string TelefoneNumero { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Informe a senha.")]
         [MinLength(8)]
         public string Senha { get; set; }
 
-        [Required]
+        [Required(ErrorMessage = "Informe a senha.")]
         [Compare("Senha", ErrorMessage = "As senhas não coincidem.")]
         public string ConfirmarSenha { get; set; }
-        [Required]
-        public EnderecoViewModel EnderecoResidencial { get; set; } 
-        [Required]
+        [Required(ErrorMessage = "Informe o endereço residencial.")]
+        public EnderecoViewModel EnderecoResidencial { get; set; }
+        [Required(ErrorMessage = "Informe o endereço de cobrança.")]
         public EnderecoViewModel EnderecoCobranca { get; set; }
 
         [Required]
@@ -85,23 +87,12 @@ namespace CRUD_Cliente2.Web.ViewModels
                 TelefoneNumero = TelefoneNumero,
                 Senha = Senha,
                 EnderecoResidencial = EnderecoResidencial.ToEntity(),
-                EnderecoCobranca = EnderecoCobranca.ToEntity(),
-                Cartoes = new List<Cartao>
-            {
-                new Cartao
-                {
-                    NumeroCartao = NumeroCartao,
-                    NomeImpresso = NomeImpresso,
-                    Bandeira = Bandeira,
-                    CodigoSeguranca = CodigoSeguranca,
-                    Preferencial = Preferencial
-                }
-            }
+                EnderecoCobranca = EnderecoCobranca.ToEntity()
             };
 
             return cliente;
         }
     }
 }
-    
+
 

@@ -41,8 +41,8 @@ public class ClienteController : Controller
 
     public IActionResult Create()
     {
-        var viewModel = new ClienteCreateViewModel 
-        { 
+        var viewModel = new ClienteCreateViewModel
+        {
             EnderecoResidencial = new EnderecoViewModel(),
             EnderecoCobranca = new EnderecoViewModel()
         };
@@ -59,7 +59,7 @@ public class ClienteController : Controller
         {
             try
             {
-                var cliente = viewModel.ToEntity();
+                var cliente = viewModel;
                 await _clienteFacade.CadastrarClienteAsync(cliente);
                 return RedirectToAction(nameof(Index));
             }
@@ -141,7 +141,7 @@ public class ClienteController : Controller
         }
 
         var endereco = viewModel.ToEntity();
-        await _clienteFacade.AdicionarEnderecoAsync(viewModel.ClienteId,endereco);
+        await _clienteFacade.AdicionarEnderecoAsync(viewModel.ClienteId, endereco);
 
         return RedirectToAction("Details", new { id = viewModel.ClienteId });
     }
@@ -163,7 +163,7 @@ public class ClienteController : Controller
 
         try
         {
-            await _clienteFacade.AdicionarCartaoAsync(viewModel.ToEntity());
+            await _clienteFacade.AdicionarCartaoAsync(viewModel);
             return RedirectToAction(nameof(Details), new { id = viewModel.ClienteId });
         }
         catch (Exception ex)
