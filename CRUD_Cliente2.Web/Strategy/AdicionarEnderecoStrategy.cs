@@ -16,12 +16,10 @@ namespace CRUD_Cliente2.Web.Strategy
 
         public async Task ExecutarAsync(int clienteId, Endereco endereco)
         {
-            if (endereco == null)
+            if (clienteId == 0)
                 throw new InvalidOperationException("Cliente não encontrado.");
 
-            await _clienteDAO.AdiconarEnderecoAsync(clienteId, endereco);
-
-            
+            await _clienteDAO.AdicionarEnderecoAsync(clienteId, endereco);
         }
     }
 }

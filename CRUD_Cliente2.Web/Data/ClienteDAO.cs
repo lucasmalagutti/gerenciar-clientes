@@ -69,10 +69,10 @@ namespace CRUD_Cliente2.Web.Data
                 .ToListAsync();
         }
 
-        public async Task AdicionarAsync(Cliente cliente)
+        public async Task AdicionarAsync(Cliente cliente, CancellationToken cancellationToken)
         {
-            await _context.Clientes.AddAsync(cliente);
-            await _context.SaveChangesAsync();
+            await _context.Clientes.AddAsync(cliente, cancellationToken);
+            await _context.SaveChangesAsync(cancellationToken);
         }
 
         public async Task AtualizarAsync(Cliente cliente)
@@ -81,14 +81,14 @@ namespace CRUD_Cliente2.Web.Data
             await _context.SaveChangesAsync();
         }
 
-        public async Task InativarAsync(int id)
+        public async Task InativarAsync(int id, CancellationToken cancellationToken)
         {
             var cliente = await _context.Clientes.FindAsync(id);
             if (cliente != null)
             {
                 cliente.Ativo = false;
                 _context.Clientes.Update(cliente);
-                await _context.SaveChangesAsync();
+                await _context.SaveChangesAsync(cancellationToken);
             }
         }
         public async Task AdicionarCartaoAsync(Cartao cartao)
@@ -99,7 +99,7 @@ namespace CRUD_Cliente2.Web.Data
             await _context.Cartoes.AddAsync(cartao);
             await _context.SaveChangesAsync();
         }
-        public async Task AdiconarEnderecoAsync(int clienteId, Endereco endereco)
+        public async Task AdicionarEnderecoAsync(int clienteId, Endereco endereco)
         {
             endereco.ClienteId = clienteId;
             await _context.Enderecos.AddAsync(endereco);

@@ -53,14 +53,14 @@ public class ClienteController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create(ClienteCreateViewModel viewModel)
+    public async Task<IActionResult> Create(ClienteCreateViewModel viewModel, CancellationToken ct)
     {
         if (ModelState.IsValid)
         {
             try
             {
                 var cliente = viewModel;
-                await _clienteFacade.CadastrarClienteAsync(cliente);
+                await _clienteFacade.CadastrarClienteAsync(cliente, ct);
                 return RedirectToAction(nameof(Index));
             }
             catch (Exception ex)
@@ -68,7 +68,8 @@ public class ClienteController : Controller
                 ModelState.AddModelError(string.Empty, ex.Message);
             }
         }
-
+        _clienteFacade.PopularDropdowns(viewModel.EnderecoResidencial);
+        _clienteFacade.PopularDropdowns(viewModel.EnderecoCobranca);
         return View(viewModel);
     }
 
@@ -84,13 +85,13 @@ public class ClienteController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(ClienteEditViewModel viewModel)
+    public async Task<IActionResult> Edit(ClienteEditViewModel viewModel, CancellationToken ct)
     {
         if (!ModelState.IsValid)
             return View(viewModel);
 
         var cliente = viewModel.ToEntity();
-        await _clienteFacade.EditarClienteAsync(cliente);
+        await _clienteFacade.EditarClienteAsync(cliente, ct);
 
         return RedirectToAction(nameof(Index));
     }
@@ -117,9 +118,9 @@ public class ClienteController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Inativar(int id)
+    public async Task<IActionResult> Inativar(int id, CancellationToken ct)
     {
-        await _clienteFacade.InativarClienteAsync(id);
+        await _clienteFacade.InativarClienteAsync(id, ct);
         return RedirectToAction(nameof(Index));
     }
     [HttpGet]

@@ -71,10 +71,10 @@ namespace CRUD_Cliente2.Web.Facade
             return await _clienteDAO.ObterTodosAsync();
         }
 
-        public async Task CadastrarClienteAsync(ClienteCreateViewModel viewModel)
+        public async Task CadastrarClienteAsync(ClienteCreateViewModel viewModel, CancellationToken cancellationToken = default)
         {
             var cliente = viewModel.ToEntity();
-            await _cadastrarStrategy.ExecutarAsync(cliente);
+            await _cadastrarStrategy.ExecutarAsync(cliente, cancellationToken);
             if (!string.IsNullOrWhiteSpace(viewModel.NumeroCartao))
             {
                 var cartao = new Cartao
@@ -96,17 +96,17 @@ namespace CRUD_Cliente2.Web.Facade
             _popularDropdownsStrategy.Executar(enderecoViewModel);
         }
 
-        public async Task EditarClienteAsync(Cliente cliente)
+        public async Task EditarClienteAsync(Cliente cliente, CancellationToken ct = default)
         {
-            await _editarStrategy.ExecutarAsync(cliente);
+            await _editarStrategy.ExecutarAsync(cliente, ct);
         }
 
-        public async Task InativarClienteAsync(int clienteId)
+        public async Task InativarClienteAsync(int clienteId, CancellationToken ct = default)
         {
             var cliente = await _clienteDAO.ObterPorIdAsync(clienteId);
             if (cliente != null)
             {
-                await _inativarStrategy.ExecutarAsync(cliente);
+                await _inativarStrategy.ExecutarAsync(cliente, ct);
             }
         }
 
